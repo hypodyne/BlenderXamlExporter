@@ -1,12 +1,14 @@
 ##########################################
 # Copyright AI Robot Media 2017
+# Bug fixes and Blender 2.8 support by CodingEric@Github
+# Rename it to io_export_xaml.py before installation if encountering bugs
 ##########################################
 
 bl_info = {
     "name": "XAML format (.xaml)",
-    "author": "AI Robot Media",
-    "version": (1, 0, 0),
-    "blender": (2, 71, 0),
+    "author": "AI Robot Media, CodingEric",
+    "version": (1, 0, 1),
+    "blender": (2, 80, 0),
     "location": "File > Export > XAML",
     "description": "Export scene to XAML",
     "warning": "",
@@ -76,7 +78,7 @@ class XamlExporter :
         # Vertices are correct
         self.writer.writeString("Positions=" + '"')
         for vertice in mesh.vertices:
-            self.writer.writeString("%f,%f,%f " % (compactFloat(round(vertice.co.x, 6)), compactFloat(round(vertice.co.y, 6)), compactFloat(round(vertice.co.z, 6))))
+            self.writer.writeString("%s,%s,%s " % (compactFloat(round(vertice.co.x, 6)), compactFloat(round(vertice.co.y, 6)), compactFloat(round(vertice.co.z, 6))))
         self.writer.writeLine('"')
 
         # Triangle Indices
@@ -96,10 +98,10 @@ class XamlExporter :
                 self.writer.writeString("n use smooth (lookup)")
             else:
                 if len(polygon.vertices) == 3:
-                    self.writer.writeString("%d,%d,%d " % (polygon.normal[0], polygon.normal[1], polygon.normal[2],))
+                    self.writer.writeString("%s,%s,%s " % (compactFloat(round(polygon.normal[0],6)), compactFloat(round(polygon.normal[1],6)), compactFloat(round(polygon.normal[2],6)),))
                 elif len(polygon.vertices) == 4:
-                    self.writer.writeString("%d,%d,%d " % (polygon.normal[0], polygon.normal[1], polygon.normal[2],))
-                    self.writer.writeString("%d,%d,%d " % (polygon.normal[0], polygon.normal[1], polygon.normal[2],))
+                    self.writer.writeString("%s,%s,%s " % (compactFloat(round(polygon.normal[0],6)), compactFloat(round(polygon.normal[1],6)), compactFloat(round(polygon.normal[2],6)),))
+                    self.writer.writeString("%s,%s,%s " % (compactFloat(round(polygon.normal[0],6)), compactFloat(round(polygon.normal[1],6)), compactFloat(round(polygon.normal[2],6)),))
         self.writer.writeLine('"')
 
         #self.writer.writeString("\n")
@@ -164,11 +166,11 @@ def menu_func(self, context):
 
 def register():
     bpy.utils.register_class(ExportXaml)
-    bpy.types.INFO_MT_file_export.append(menu_func)
+    bpy.types.TOPBAR_MT_file_export.append(menu_func)
 
 def unregister():
     bpy.utils.unregister_class(ExportXaml)
-    bpy.types.INFO_MT_file_export.remove(menu_func)
+    bpy.types.TOPBAR_MT_file_export.remove(menu_func)
 
 if __name__ == "__main__":
     register()
